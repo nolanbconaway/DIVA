@@ -8,14 +8,13 @@ function result= DIVA_GET_RESULT(diva,inputs,labels)
 
 % INPUT ARGUMENTS:
 % 	diva is a struct that is assumed to contain:
-% 		diva.numUpdates = 16*16; % number of weight updates
+% 		diva.numUpdates = 160; % number of weight updates
 % 		diva.numInitials = 50; % number of randomized divas
 % 		diva.weightRange = .5; % range of inital weight values
 % 		diva.numHiddenUnits = 2; % # hidden units
 % 		diva.learningRate = .15; % learning rate for gradient descent
-% 		diva.betaValue = 20; % beta parameter for focusing
+% 		diva.betaValue = 2.5; % beta parameter for focusing
 % 		diva.clipValues=[true, true]; %clip values for [classify,backprop]
-% 		diva.valueRange = [-1 1]; 		% min & max values
 % 
 %	input is an [eg,dimension] matrix containing a block of unique examples
 %	labels is an integer vector containing category labels for each row in input
@@ -25,6 +24,7 @@ function result= DIVA_GET_RESULT(diva,inputs,labels)
 	hiddenactrule = 'sigmoid'; % which activation rule?
 	outputactrule = 'linear'; % options: 'linear', 'sigmoid', 'tanh'
 	valueRange=[floor(min(min(inputs))),ceil(max(max(inputs)))];
+	weightCenter=0; % mean value of weights
 	
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
@@ -44,10 +44,10 @@ train_accuracy=zeros(numUpdates,numInitials);
 for modelnumber = 1:numInitials
     
 %     generating initial weights
-    inWeights = getWeights(numDims, numHiddenUnits, weightRange);
+    inWeights = getWeights(numDims, numHiddenUnits, weightRange, weightCenter);
     outWeights=zeros(numHiddenUnits+1,numDims,numCats);
     for o=1:numCats;
-        outWeights(:,:,o)= getWeights(numHiddenUnits, numDims, weightRange);
+        outWeights(:,:,o)= getWeights(numHiddenUnits, numDims, weightRange, weightCenter);
     end
     
     %     generating full example set
@@ -101,7 +101,9 @@ for modelnumber = 1:numInitials
         clear pCat outputactivations hiddenactivation hiddenactivation_raw ...
 			inputswithbias outputderivative hiddenderivative ...
 			currentinput currentcategory
-    end
+	end
+	[pCat] = forwardpass(inWeights,outWeights,inputs,hiddenactrule,outputactrule,...
+                betaValue,humbleClassify,valueRange,1);
       
 %     Clearing out some variables for the next initialization
     clear network_input network_labels Input_Hidden_wts outWeights

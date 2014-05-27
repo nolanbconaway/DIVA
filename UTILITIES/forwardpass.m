@@ -36,10 +36,11 @@ function...
 % 
 %-------------------------------------------------------------------------
 
+numpatterns=size(inputpatterns,1);
+numcategories=size(outweights,3);
 
 outputactivations=zeros(size(inputpatterns,1),...
 	size(inputpatterns,2),size(outweights,3));
-ssqerror=zeros(size(inputpatterns,1),size(outweights,3),1);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % input and hidden unit propgation
@@ -59,33 +60,36 @@ hiddenactivation=[ones(size(hiddenactivation,1),1),hiddenactivation];
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % get output activaton
-for o=1:size(outweights,3)
+for o=1:numcategories
     outputactivations(:,:,o)=(hiddenactivation*outweights(:,:,o));
-    if strcmp(outactrule,'sigmoid') % applying sigmoid
-        outputactivations(:,:,o)=sigmoid(outputactivations(:,:,o));
-    elseif strcmp(outactrule,'tanh') %applying tanh
-        outputactivations(:,:,o)=hyperbolic_tangent(outputactivations(:,:,o));
-    end
+end
+if strcmp(outactrule,'sigmoid') % applying sigmoid
+	outputactivations=sigmoid(outputactivations);
+elseif strcmp(outactrule,'tanh') %applying tanh
+	outputactivations=hyperbolic_tangent(outputactivations);
 end
 
-%calculate focus weights
-if size(outweights,3)==2;%focus weights    
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% caluclate error, focus weights, and classification probabilities
+if numcategories==2;%focus weights    
     fweights=exp(beta*(abs(...
-		outputactivations(:,:,1)-outputactivations(:,:,2)))...
-		-range(valuerange));
-else fweights=ones(inputpatterns,2);
+		outputactivations(:,:,1)-outputactivations(:,:,2))-range(valuerange)));
+else fweights=ones(size(inputpatterns));
 end
 
-% get sum of squared error on each output channel
-for o=1:size(outweights,3)
-    if humbleclassify
-        ssqerror(:,o)=1./sum((((humbleTeach(outputactivations(:,:,o),valuerange)-...
-			inputpatterns).^2).*fweights),2);
-    else ssqerror(:,o)=1./...
-			sum((((outputactivations(:,:,o)-inputpatterns).^2).*fweights),2);
-    end
+% get error on each output channel
+if humbleclassify
+	ssqerror=humbleTeach(outputactivations,valuerange)-repmat(inputpatterns,[1,1,numcategories]);
+else ssqerror=outputactivations-repmat(inputpatterns,[1,1,numcategories]);
 end
+% square error and apply focus weights, then get the sum
+ssqerror=sum((ssqerror.^2).*repmat(fweights,[1,1,numcategories]),2);
 
+% cap error at realmax to prevent NaN and shape result in 2D
+ssqerror(ssqerror>realmax)=realmax;
+ssqerror=reshape(1./ssqerror,[numpatterns,numcategories]);
+
+% get probability
 pCat=ssqerror(:,currentcategory)./sum(ssqerror,2);
 
 clear in_act hidz hida fweights ssqerror

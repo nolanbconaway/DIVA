@@ -1,4 +1,4 @@
-function wts = getWeights(layer1_units, layer2_units, weightRange,center)
+function wts = getWeights(layer1_units, layer2_units, weightRange, center)
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % this script generates weights for neural networks; simply provide the
@@ -11,9 +11,13 @@ function wts = getWeights(layer1_units, layer2_units, weightRange,center)
 % layer1_units = sending units
 % layer2_units = reciving units
 % weightRange = range of values
-% center = 0 means that weights will be centered around 0, 
-%           1 = center of .5
+% center = center of weight distribution
 
 
 bias=1;
-wts = weightRange * (2 * ((rand((layer1_units + bias), layer2_units) - .5)));
+
+wts=rand((layer1_units + bias), layer2_units) - 0.5; %interval [-0.5 : 0.5]
+wts=2*wts; %interval [-1 : 1]
+wts = weightRange * wts; % interval [-weightRange : weightRange]
+
+wts=center+wts;

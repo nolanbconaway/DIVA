@@ -18,19 +18,23 @@ diva=struct;
 % % % % % % % % % % % % % % % % % % % % % 
 % % NETWORK PARAMETERS & ARCHITECTURE % % 
 % % % % % % % % % % % % % % % % % % % % %
+shjtype=2;
+[inputs,labels]=SHJINPUTS(shjtype);
 
-[inputs,labels]=SHJINPUTS(1);
-
-diva.numUpdates = 160; % number of weight updates
-diva.numInitials = 10; % number of randomized divas to be averaged across
+diva.numUpdates = 8*25; % number of weight updates
+diva.numInitials = 5; % number of randomized divas to be averaged across
 diva.weightRange = .5; % range of inital weight values
 diva.numHiddenUnits = 2; % # hidden units
-diva.learningRate = .15; % learning rate for gradient descent
-diva.betaValue = 120; % beta parameter for focusing
+diva.learningRate = 0.15; % learning rate for gradient descent
+diva.betaValue = 0; % beta parameter for focusing
 
 % clip activations at a min and maximum value?
 diva.clipValues=[true, true]; %classify,backprop
 
 % this passes the parameters to the training scripts.
 result = DIVA_GET_RESULT(diva,inputs,labels);
-result.blockByBlockAccuracy
+
+% get fit value
+simulation=result.blockByBlockAccuracy
+behavioral=nosofsky_shjdata(shjtype)
+fitvalue=sum((behavioral-result.blockByBlockAccuracy).^2)
