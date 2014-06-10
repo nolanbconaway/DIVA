@@ -25,6 +25,8 @@ function result= DIVA_GET_RESULT(diva,inputs,labels)
 	outputactrule = 'linear'; % options: 'linear', 'sigmoid', 'tanh'
 	valueRange=[floor(min(min(inputs))),ceil(max(max(inputs)))];
 	weightCenter=0; % mean value of weights
+    humbleClassify = true; % clip activations at a 
+    humbleLearn =  true;   % min and maximum value?
 	
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
@@ -35,8 +37,6 @@ v2struct(diva) %unpack input params
 numDims = size(inputs,2);
 numStim = size(inputs,1); 
 numCats = length(unique(labels));
-humbleClassify=clipValues(1);
-humbleLearn=clipValues(2);
 
 train_accuracy=zeros(numUpdates,numInitials);
 
@@ -102,9 +102,9 @@ for modelnumber = 1:numInitials
 			inputswithbias outputderivative hiddenderivative ...
 			currentinput currentcategory
 	end
-	[pCat] = forwardpass(inWeights,outWeights,inputs,hiddenactrule,outputactrule,...
-                betaValue,humbleClassify,valueRange,1);
-      
+% 	[pCat,outputactivations,hiddenactivation] = forwardpass(inWeights,outWeights,inputs,hiddenactrule,outputactrule,...
+%                 betaValue,humbleClassify,valueRange,1);
+%       [inputs,hiddenactivation]
 %     Clearing out some variables for the next initialization
     clear network_input network_labels Input_Hidden_wts outWeights
 end
