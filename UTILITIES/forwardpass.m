@@ -51,7 +51,7 @@ hiddenactivation_raw=inputswithbias*inweights;
 if strcmp(hiddenactrule,'sigmoid') % applying sigmoid;
     hiddenactivation=sigmoid(hiddenactivation_raw);
 elseif strcmp(hiddenactrule,'tanh')  %applying tanh
-    hiddenactivation=hyperbolic_tangent(hiddenactivation_raw);
+    hiddenactivation=tanh(hiddenactivation_raw);
 else hiddenactivation=hiddenactivation_raw;
 end
 
@@ -66,7 +66,7 @@ end
 if strcmp(outactrule,'sigmoid') % applying sigmoid
 	outputactivations=sigmoid(outputactivations);
 elseif strcmp(outactrule,'tanh') %applying tanh
-	outputactivations=hyperbolic_tangent(outputactivations);
+	outputactivations=tanh(outputactivations);
 end
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 

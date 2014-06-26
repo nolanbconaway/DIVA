@@ -18,10 +18,10 @@ diva=struct;
 % % % % % % % % % % % % % % % % % % % % % 
 % % NETWORK PARAMETERS & ARCHITECTURE % % 
 % % % % % % % % % % % % % % % % % % % % %
-shjtype=6;
+shjtype=4;
 [inputs,labels]=SHJINPUTS(shjtype);
 
-diva.numUpdates = 8*25; % number of weight updates
+diva.numUpdates = 16*16; % number of weight updates
 diva.numInitials = 1; % number of randomized divas to be averaged across
 diva.weightRange = .5; % range of inital weight values
 diva.numHiddenUnits = 2; % # hidden units
@@ -31,7 +31,7 @@ diva.betaValue = 0; % beta parameter for focusing
 
 % this passes the parameters to the training scripts.
 result = DIVA_GET_RESULT(diva,inputs,labels);
-result
+
 % get fit value
 simulation=result.blockByBlockAccuracy
 behavioral=nosofsky_shjdata(shjtype);

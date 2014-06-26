@@ -14,13 +14,12 @@ function result= DIVA_GET_RESULT(diva,inputs,labels)
 % 		diva.numHiddenUnits = 2; % # hidden units
 % 		diva.learningRate = .15; % learning rate for gradient descent
 % 		diva.betaValue = 2.5; % beta parameter for focusing
-% 		diva.clipValues=[true, true]; %clip values for [classify,backprop]
 % 
 %	input is an [eg,dimension] matrix containing a block of unique examples
 %	labels is an integer vector containing category labels for each row in input
 % ----------------------------------------------------------------------------
 
-%   these are optional editables
+%   these are optional editables, currently set at default values
 	hiddenactrule = 'sigmoid'; % which activation rule?
 	outputactrule = 'linear'; % options: 'linear', 'sigmoid', 'tanh'
 	valueRange=[floor(min(min(inputs))),ceil(max(max(inputs)))];
@@ -113,6 +112,6 @@ end
 result.trialByTrialAccuracy=mean(train_accuracy,2);
 
 if numStim<=numUpdates% get mean accuracy by block
-    result.blockByBlockAccuracy=returnblocks(mean(train_accuracy,2),numStim); 
+    result.blockByBlockAccuracy=returnblocks(mean(train_accuracy,2),numStim*2); %nosofsky did double blocks 
 end    
 end
