@@ -1,4 +1,4 @@
-function old_vals = humbleTeach(old_vals,humble_range)
+function values = clipvalues(values,value_range)
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % this takes in any matrix and clips values at the values specified in
@@ -10,12 +10,8 @@ function old_vals = humbleTeach(old_vals,humble_range)
 % 
 % labels=[min max]; % uncomment and fill in for arbitrary clipping
 
-% (.1^10) prevents NaN from showing up
-lower_lim = min(humble_range) + (.1^10);
-upper_lim = max(humble_range) - (.1^10);
-
-old_vals(old_vals<lower_lim)=lower_lim;
-old_vals(old_vals>upper_lim)=upper_lim;
+values(values<value_range(1))=value_range(1);
+values(values>value_range(2))=value_range(2);
 
             
             

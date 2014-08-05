@@ -1,5 +1,5 @@
 function...
-	[pCat,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
+	[p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
 		forwardpass(inweights,outweights,...%weight matrices
 			inputpatterns,...%activations to be passed through the model
 			hiddenactrule,outactrule,...%option for activation rule
@@ -20,7 +20,7 @@ function...
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % 
 % OUTPUT ARGUMENTS
-% 	pCat: probabilty of classification as member of category C
+% 	p: probabilty of classification as member of category C
 % 	outputactivations: output layer activations
 % 	hiddenactivation: hidden layer activations,including bias
 % 	hiddenactivation_raw: dot product of inputs and in-hid weights
@@ -74,23 +74,27 @@ end
 if numcategories==2;%focus weights    
     fweights=exp(beta*(abs(...
 		outputactivations(:,:,1)-outputactivations(:,:,2))-range(valuerange)));
+	fweights(fweights>1)=1;
 else fweights=ones(size(inputpatterns));
 end
 
 % get error on each output channel
 if humbleclassify
-	ssqerror=humbleTeach(outputactivations,valuerange)-repmat(inputpatterns,[1,1,numcategories]);
+	ssqerror=clipvalues(outputactivations,valuerange)-repmat(inputpatterns,[1,1,numcategories]);
 else ssqerror=outputactivations-repmat(inputpatterns,[1,1,numcategories]);
 end
+
 % square error and apply focus weights, then get the sum
 ssqerror=sum((ssqerror.^2).*repmat(fweights,[1,1,numcategories]),2);
 
-% cap error at realmax to prevent NaN and shape result in 2D
-ssqerror(ssqerror>realmax)=realmax;
+% reshape and inverse the error
 ssqerror=reshape(1./ssqerror,[numpatterns,numcategories]);
 
+% cap error at realmax to prevent nans and infs
+ssqerror(ssqerror>realmax)=realmax;
+
 % get probability
-pCat=ssqerror(:,currentcategory)./sum(ssqerror,2);
+p=ssqerror(:,currentcategory)./sum(ssqerror,2);
 
 clear in_act hidz hida fweights ssqerror
 

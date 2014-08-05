@@ -1,4 +1,4 @@
-function wts = getWeights(layer1_units, layer2_units, weightRange, center)
+function wts = getweights(layer1_units, layer2_units, weightRange, center)
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % this script generates weights for neural networks; simply provide the
