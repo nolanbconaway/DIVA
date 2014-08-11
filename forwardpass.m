@@ -79,19 +79,23 @@ else fweights=ones(size(inputpatterns));
 end
 
 % get error on each output channel
-if humbleclassify
+if humbleclassify 
 	ssqerror=clipvalues(outputactivations,valuerange)-repmat(inputpatterns,[1,1,numcategories]);
 else ssqerror=outputactivations-repmat(inputpatterns,[1,1,numcategories]);
 end
 
-% square error and apply focus weights, then get the sum
-ssqerror=sum((ssqerror.^2).*repmat(fweights,[1,1,numcategories]),2);
+% square error and make sure there are no zeros
+ssqerror=ssqerror.^2;
+ssqerror(ssqerror<1e-7) = 1e-7;
+
+%  apply focus weights, then get the sum for each category
+ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
 
 % reshape and inverse the error
-ssqerror=reshape(1./ssqerror,[numpatterns,numcategories]);
+ssqerror=1./reshape(ssqerror,[numpatterns,numcategories]);
 
-% cap error at realmax to prevent nans and infs
-ssqerror(ssqerror>realmax)=realmax;
+% make sure there are no infs after weighting
+ssqerror(ssqerror>realmax/(numcategories+1)) = realmax/(numcategories+1);
 
 % get probability
 p=ssqerror(:,currentcategory)./sum(ssqerror,2);
