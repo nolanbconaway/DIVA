@@ -1,9 +1,9 @@
 function...
 	[p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
-		forwardpass(inweights,outweights,...%weight matrices
+		FORWARDPASS(inweights,outweights,...%weight matrices
 			inputpatterns,...%activations to be passed through the model
 			hiddenactrule,outactrule,...%option for activation rule
-			beta,...%focusing paramater
+			betavalue,...%focusing paramater
 			humbleclassify,valuerange,...option to clip activations
 			currentcategory) %category label that p(a) is evaluated by    
                    
@@ -72,7 +72,7 @@ end
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % caluclate error, focus weights, and classification probabilities
 if numcategories==2;%focus weights    
-    fweights=exp(beta*(abs(...
+    fweights=exp(betavalue*(abs(...
 		outputactivations(:,:,1)-outputactivations(:,:,2))-range(valuerange)));
 	fweights(fweights>1)=1;
 else fweights=ones(size(inputpatterns));
@@ -99,6 +99,3 @@ ssqerror(ssqerror>realmax/(numcategories+1)) = realmax/(numcategories+1);
 
 % get probability
 p=ssqerror(:,currentcategory)./sum(ssqerror,2);
-
-clear in_act hidz hida fweights ssqerror
-
