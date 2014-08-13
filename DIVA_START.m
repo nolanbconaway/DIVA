@@ -18,16 +18,18 @@ diva=struct;
 % % % % % % % % % % % % % % % % % % % % % 
 % % NETWORK PARAMETERS & ARCHITECTURE % % 
 % % % % % % % % % % % % % % % % % % % % %
-[inputs,labels]=SHJINPUTS(1);
+[inputs,labels]=SHJINPUTS(4);
 
 diva.numblocks = 32; % number of runs through the training set
-diva.numinitials = 10; % number of randomized divas to be averaged across
+diva.numinitials = 1; % number of randomized divas to be averaged across
 diva.weightrange = 0.5; % range of inital weight values
 diva.numhiddenunits = 2; % # hidden units
 diva.learningrate = 0.25; % learning rate for gradient descent
-diva.betavalue = 50; % beta parameter for focusing
+
+diva.betavalue = 100; % beta parameter for focusing
 
 
 % this passes the parameters to the training scripts.
+
 result = DIVA_GET_RESULT(diva,inputs,labels);
 disp(result.training)

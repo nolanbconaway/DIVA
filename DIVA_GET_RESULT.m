@@ -32,7 +32,7 @@ result=struct; %initialize the results structure
 v2struct(diva) %unpack input params
 
 % initializing some useful variables
-numdimensions = size(inputs,2);
+numfeatures = size(inputs,2);
 numstimuli = size(inputs,1); 
 numcategories = length(unique(labels));
 numupdates = numblocks*numstimuli;
@@ -43,12 +43,9 @@ trainingdata=zeros(numupdates,numinitials);
 for modelnumber = 1:numinitials
     
     %  generating initial weights
-    inweights = getweights(numdimensions, numhiddenunits, weightrange, weightcenter);
-    outweights=zeros(numhiddenunits+1,numdimensions,numcategories);
-    for o=1:numcategories;
-        outweights(:,:,o)= getweights(numhiddenunits, numdimensions, weightrange, weightcenter);
-    end
-    
+    [inweights,outweights] = getweights(numfeatures, numhiddenunits, ...
+		numcategories, weightrange, weightcenter);
+
     %  generating full presentation order
     presentationorder = getpresentationorder(numstimuli,numblocks);
     networkinput=inputs(presentationorder,:);
@@ -62,7 +59,7 @@ for modelnumber = 1:numinitials
 		currentcategory=networklabels(trialnumber);
 		
         [pCat,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
-			forwardpass(inweights,outweights,currentinput,hiddenactrule,outputactrule,...
+			FORWARDPASS(inweights,outweights,currentinput,hiddenactrule,outputactrule,...
                 betavalue,humbleclassify,valuerange,currentcategory);
         
         trainingdata(trialnumber,modelnumber)=pCat;

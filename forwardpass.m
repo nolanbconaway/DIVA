@@ -69,24 +69,29 @@ elseif strcmp(outactrule,'tanh') %applying tanh
 	outputactivations=tanh(outputactivations);
 end
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% caluclate error, focus weights, and classification probabilities
-if numcategories==2;%focus weights    
-    fweights=exp(betavalue*(abs(...
-		outputactivations(:,:,1)-outputactivations(:,:,2))-range(valuerange)));
-	fweights(fweights>1)=1;
-else fweights=ones(size(inputpatterns));
+% apply clipping at output layer
+if humbleclassify
+	outputs_for_response= clipvalues(outputactivations,valuerange);
+else outputs_for_response = outputactivations;
 end
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% caluclate error, focus weights, and classification probabilities
+
 % get error on each output channel
-if humbleclassify 
-	ssqerror=clipvalues(outputactivations,valuerange)-repmat(inputpatterns,[1,1,numcategories]);
-else ssqerror=outputactivations-repmat(inputpatterns,[1,1,numcategories]);
-end
+ssqerror=outputs_for_response-repmat(inputpatterns,[1,1,numcategories]);
 
 % square error and make sure there are no zeros
 ssqerror=ssqerror.^2;
 ssqerror(ssqerror<1e-7) = 1e-7;
+
+% generate focus weights
+if numcategories==2	
+	fweights=exp(betavalue*(abs(outputs_for_response(:,:,1)-...
+		outputs_for_response(:,:,2))-range(valuerange)));
+	fweights(fweights>1)=1;	
+else fweights=ones(size(inputpatterns));
+end
 
 %  apply focus weights, then get the sum for each category
 ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
