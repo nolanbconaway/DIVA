@@ -1,11 +1,15 @@
+
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % <3 <3 <3 WELCOME TO DIVA <3 <3 <3 % % % % % % % % %
-% % % % % % % % % 
-% % % % % % % % % these functions assume 
-% % % % % % % % %       1) that there is only 1 hidden layer
-% % % % % % % % %       2) Weight updates are trial based
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% %        _     _      _     _      _     _      _     _         % %
+% %       (c).-.(c)    (c).-.(c)    (c).-.(c)    (c).-.(c)        % %
+% %        / ._. \      / ._. \      / ._. \      / ._. \         % %
+% %      __\( Y )/__  __\( Y )/__  __\( Y )/__  __\( Y )/__       % %
+% %     (_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)      % %
+% %        || D ||      || I ||      || V ||      || A ||         % %
+% %      _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '._       % %
+% %     (.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)      % %
+% %      `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-'       % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % Use this script to initalize the DIVA model and begin the simulation
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
@@ -13,23 +17,30 @@
 % initialize the search path
 clear;close;clc;
 addpath([pwd,'/UTILITIES/']); 
-diva=struct;
 
-% % % % % % % % % % % % % % % % % % % % % 
-% % NETWORK PARAMETERS & ARCHITECTURE % % 
-% % % % % % % % % % % % % % % % % % % % %
-[inputs,labels]=SHJINPUTS(4);
+% initialize network design and set parameters
+model =  struct;
+	model.numblocks = 16; % number of runs through the training set
+	model.numinitials = 10; % number of randomized divas to be averaged across
+	model.weightrange = 0.5; % range of inital weight values
+	model.numhiddenunits = 2; % # hidden units
+	model.learningrate = 0.25; % learning rate for gradient descent
+	model.betavalue =  10;
+	
+% iterate across shj types
+training = zeros(model.numblocks,6);
+for shj = 1:6
+	
+% 	set current category structre
+	[inputs,labels]=SHJINPUTS(shj);
+	
+% 	run simulation
+	result = DIVA_GET_RESULT(model,inputs,labels);
+	
+% 	add result tomtraining data
+	training(:,shj) = result.training;
+end
+	
+disp(training)
 
-diva.numblocks = 32; % number of runs through the training set
-diva.numinitials = 1; % number of randomized divas to be averaged across
-diva.weightrange = 0.5; % range of inital weight values
-diva.numhiddenunits = 2; % # hidden units
-diva.learningrate = 0.25; % learning rate for gradient descent
 
-diva.betavalue = 100; % beta parameter for focusing
-
-
-% this passes the parameters to the training scripts.
-
-result = DIVA_GET_RESULT(diva,inputs,labels);
-disp(result.training)

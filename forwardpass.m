@@ -36,15 +36,15 @@ function...
 % 
 %-------------------------------------------------------------------------
 
-numpatterns=size(inputpatterns,1);
+numstimuli=size(inputpatterns,1);
+numfeatures=size(inputpatterns,2);
 numcategories=size(outweights,3);
 
-outputactivations=zeros(size(inputpatterns,1),...
-	size(inputpatterns,2),size(outweights,3));
+outputactivations=zeros(numstimuli,numfeatures,numcategories);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % input and hidden unit propgation
-inputswithbias = [ones(size(inputpatterns,1),1),inputpatterns]; 
+inputswithbias = [ones(numstimuli,1),inputpatterns]; 
 hiddenactivation_raw=inputswithbias*inweights;
 
 % apply hidden node activation rule
@@ -56,13 +56,14 @@ else hiddenactivation=hiddenactivation_raw;
 end
 
 % adding a value of 1 to represent the bias unit 
-hiddenactivation=[ones(size(hiddenactivation,1),1),hiddenactivation];
+hiddenactivation=[ones(numstimuli,1),hiddenactivation];
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % get output activaton
-for o=1:numcategories
+for o = 1:numcategories
     outputactivations(:,:,o)=(hiddenactivation*outweights(:,:,o));
 end
+
 if strcmp(outactrule,'sigmoid') % applying sigmoid
 	outputactivations=sigmoid(outputactivations);
 elseif strcmp(outactrule,'tanh') %applying tanh
@@ -86,10 +87,9 @@ ssqerror=ssqerror.^2;
 ssqerror(ssqerror<1e-7) = 1e-7;
 
 % generate focus weights
-if numcategories==2	
-	fweights=exp(betavalue*(abs(outputs_for_response(:,:,1)-...
-		outputs_for_response(:,:,2))-range(valuerange)));
-	fweights(fweights>1)=1;	
+if numcategories==2		
+	diversities = exp(betavalue.*abs(outputs_for_response(:,:,1)-outputs_for_response(:,:,2)));
+	fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
 else fweights=ones(size(inputpatterns));
 end
 
@@ -97,10 +97,9 @@ end
 ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
 
 % reshape and inverse the error
-ssqerror=1./reshape(ssqerror,[numpatterns,numcategories]);
-
-% make sure there are no infs after weighting
-ssqerror(ssqerror>realmax/(numcategories+1)) = realmax/(numcategories+1);
+ssqerror=1./reshape(ssqerror,[numstimuli,numcategories]);
 
 % get probability
 p=ssqerror(:,currentcategory)./sum(ssqerror,2);
+
+

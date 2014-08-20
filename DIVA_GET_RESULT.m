@@ -36,7 +36,9 @@ numfeatures = size(inputs,2);
 numstimuli = size(inputs,1); 
 numcategories = length(unique(labels));
 numupdates = numblocks*numstimuli;
-trainingdata=zeros(numupdates,numinitials);
+
+
+training=zeros(numupdates,numinitials);
 
 %   Initializing diva and running the simulation
 %   ------------------------------------------------------ % 
@@ -62,7 +64,7 @@ for modelnumber = 1:numinitials
 			FORWARDPASS(inweights,outweights,currentinput,hiddenactrule,outputactrule,...
                 betavalue,humbleclassify,valuerange,currentcategory);
         
-        trainingdata(trialnumber,modelnumber)=pCat;
+        training(trialnumber,modelnumber)=pCat;
 		
         
         %   Back-propagating the activations
@@ -94,5 +96,5 @@ for modelnumber = 1:numinitials
 end
 
 % store perfomance in the result struct
-result.training=returnblocks(mean(trainingdata,2),numstimuli)'; 
+result.training=returnblocks(mean(training,2),numstimuli)'; 
 end
