@@ -11,7 +11,7 @@
 % %     (.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)      % %
 % %      `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-'       % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% Use this script to initalize the DIVA model and begin the simulation
+% Use this script to initalize the DIVA model and begin a simulation
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
 % initialize the search path
@@ -21,7 +21,7 @@ addpath([pwd,'/UTILITIES/']);
 % initialize network design and set parameters
 model =  struct;
 	model.numblocks = 16; % number of runs through the training set
-	model.numinitials = 10; % number of randomized divas to be averaged across
+	model.numinitials = 1; % number of randomized divas to be averaged across
 	model.weightrange = 0.5; % range of inital weight values
 	model.numhiddenunits = 2; % # hidden units
 	model.learningrate = 0.25; % learning rate for gradient descent

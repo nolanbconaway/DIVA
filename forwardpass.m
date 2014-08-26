@@ -31,7 +31,7 @@ function...
 % 	inputpatterns (M x N matrix): activations to be passed through the model
 % 	hiddenactrule,outactrule (string): option for activation rule
 % 	beta (0<=x<inf): focusing paramater
-% 	humbleclassify (bool),valuerange (vector): option to clip activations
+% 	humbleclassify (bool), valuerange (vector): option to clip activations
 % 	currentcategory(integer): category label that pCat is evaluated by    
 % 
 %-------------------------------------------------------------------------
@@ -39,8 +39,6 @@ function...
 numstimuli=size(inputpatterns,1);
 numfeatures=size(inputpatterns,2);
 numcategories=size(outweights,3);
-
-outputactivations=zeros(numstimuli,numfeatures,numcategories);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % input and hidden unit propgation
@@ -60,6 +58,7 @@ hiddenactivation=[ones(numstimuli,1),hiddenactivation];
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % get output activaton
+outputactivations=zeros(numstimuli,numfeatures,numcategories);
 for o = 1:numcategories
     outputactivations(:,:,o)=(hiddenactivation*outweights(:,:,o));
 end
@@ -87,19 +86,17 @@ ssqerror=ssqerror.^2;
 ssqerror(ssqerror<1e-7) = 1e-7;
 
 % generate focus weights
-if numcategories==2		
-	diversities = exp(betavalue.*abs(outputs_for_response(:,:,1)-outputs_for_response(:,:,2)));
-	fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
-else fweights=ones(size(inputpatterns));
-end
+diversities = exp(betavalue.*mean(abs(diff(outputs_for_response,[],3)),3));
+fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
 
 %  apply focus weights, then get the sum for each category
 ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
 
-% reshape and inverse the error
-ssqerror=1./reshape(ssqerror,[numstimuli,numcategories]);
+% reshape the error so its more readable
+ssqerror=reshape(ssqerror,[numstimuli,numcategories]);
 
-% get probability
-p=ssqerror(:,currentcategory)./sum(ssqerror,2);
+% get class probability
+p=1-(ssqerror(:,currentcategory)./sum(ssqerror,2));
+
 
 
