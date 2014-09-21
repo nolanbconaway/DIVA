@@ -1,4 +1,4 @@
-function result= DIVA_GET_RESULT(diva,inputs,labels)
+function result= DIVA(diva,inputs,labels)
 
 % ----------------------------------------------------------------------------
 % DESCRIPTION
@@ -96,5 +96,5 @@ for modelnumber = 1:numinitials
 end
 
 % store perfomance in the result struct
-result.training=returnblocks(mean(training,2),numstimuli)'; 
+result.training=blockrows(mean(training,2),numstimuli)'; 
 end

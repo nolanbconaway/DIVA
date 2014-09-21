@@ -35,7 +35,7 @@ for shj = 1:6
 	[inputs,labels]=SHJINPUTS(shj);
 	
 % 	run simulation
-	result = DIVA_GET_RESULT(model,inputs,labels);
+	result = DIVA(model,inputs,labels);
 	
 % 	add result tomtraining data
 	training(:,shj) = result.training;

@@ -48,7 +48,7 @@ for paramnum = 1:numparamconfigs
 % 	iterate across shj types
 	for shj = 1:6
 		[inputs,labels]=SHJINPUTS(shj);
-		result = DIVA_GET_RESULT(model,inputs,labels);
+		result = DIVA(model,inputs,labels);
 		training(:,shj,paramnum) = result.training;
 	end
 	
