@@ -95,8 +95,11 @@ ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
 % reshape the error so its more readable
 ssqerror=reshape(ssqerror,[numstimuli,numcategories]);
 
+% invert error
+ssqerror = 1 ./ ssqerror;
+
 % get class probability
-p=1-(ssqerror(:,currentcategory)./sum(ssqerror,2));
+p = ssqerror(:,currentcategory)./sum(ssqerror,2);
 
 
 

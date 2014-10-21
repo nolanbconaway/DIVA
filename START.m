@@ -25,7 +25,7 @@ model =  struct;
 	model.weightrange = 0.5; % range of inital weight values
 	model.numhiddenunits = 2; % # hidden units
 	model.learningrate = 0.25; % learning rate for gradient descent
-	model.betavalue =  10;
+	model.betavalue = 10;
 	
 % iterate across shj types
 training = zeros(model.numblocks,6);
@@ -37,7 +37,7 @@ for shj = 1:6
 % 	run simulation
 	result = DIVA(model,inputs,labels);
 	
-% 	add result tomtraining data
+% 	add result to training data
 	training(:,shj) = result.training;
 end
 	

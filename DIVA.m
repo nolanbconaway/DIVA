@@ -91,7 +91,8 @@ for modelnumber = 1:numinitials
 		outweights(:,:,currentcategory) = gradientDescent(learningrate,...
 			hiddenactivation,outputderivative,outweights(:,:,currentcategory));
 		inweights = gradientDescent(learningrate,inputswithbias,...
-			hiddenderivative,inweights);    
+			hiddenderivative,inweights);
+		
 	end
 end
 
