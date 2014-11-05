@@ -22,11 +22,12 @@ function result= DIVA(diva,inputs,labels)
 %   these are optional editables, currently set at default values
 	hiddenactrule = 'sigmoid'; % which activation rule?
 	outputactrule = 'linear'; % options: 'linear', 'sigmoid', 'tanh'
-	valuerange=[floor(min(min(inputs))),ceil(max(max(inputs)))];
-	weightcenter=0; % mean value of weights
+	valuerange = [floor(min(min(inputs))), ceil(max(max(inputs)))];
+	weightcenter = 0; % mean value of weights
     humbleclassify = true; % clip activations at a 
-    humblelearn =  true;   % min and maximum value?	
+    humblelearn =  true;   % min and maximum value?
 % ----------------------------------------------------------------------------
+
 
 result=struct; %initialize the results structure
 v2struct(diva) %unpack input params
@@ -60,11 +61,11 @@ for modelnumber = 1:numinitials
 		currentinput=networkinput(trialnumber,:);
 		currentcategory=networklabels(trialnumber);
 		
-        [pCat,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
+        [p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
 			FORWARDPASS(inweights,outweights,currentinput,hiddenactrule,outputactrule,...
                 betavalue,humbleclassify,valuerange,currentcategory);
         
-        training(trialnumber,modelnumber)=pCat;
+        training(trialnumber,modelnumber)=p;
 		
         
         %   Back-propagating the activations
@@ -72,19 +73,16 @@ for modelnumber = 1:numinitials
         
         %  obtain error on the output units
         if humblelearn
-			outputderivative=2*(clipvalues(...
-				outputactivations(:,:,currentcategory),valuerange) - currentinput);
-        else outputderivative = 2*(outputactivations(:,:,currentcategory) - currentinput);
+            outputactivations =  clipvalues(outputactivations,valuerange);
         end
+        outputderivative = 2*(outputactivations(:,:,currentcategory) - currentinput);
 
         %  obtain error on the hidden units
 		hiddenderivative=outputderivative*outweights(:,:,currentcategory)';
         if strcmp(hiddenactrule,'sigmoid') % applying sigmoid;
-			hiddenderivative=hiddenderivative(:,2:end).*sigmoidGradient(hiddenactivation_raw);
+			hiddenderivative=hiddenderivative(:,2:end).*sigmoidgrad(hiddenactivation_raw);
         elseif strcmp(hiddenactrule,'tanh') %applying tanh
-			hiddenderivative=hiddenderivative(:,2:end).*tanhGradient(hiddenactivation_raw);
-        else hiddenderivative=hiddenderivative(:,2:end).*...
-				(hiddenactivation_raw.*(1-hiddenactivation_raw));
+			hiddenderivative=hiddenderivative(:,2:end).*tanhgrad(hiddenactivation_raw);
         end 
 
         %  gradient descent

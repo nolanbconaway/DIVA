@@ -47,7 +47,7 @@ hiddenactivation_raw=inputswithbias*inweights;
 
 % apply hidden node activation rule
 if strcmp(hiddenactrule,'sigmoid') % applying sigmoid;
-    hiddenactivation=sigmoid(hiddenactivation_raw);
+    hiddenactivation=logsig(hiddenactivation_raw);
 elseif strcmp(hiddenactrule,'tanh')  %applying tanh
     hiddenactivation=tanh(hiddenactivation_raw);
 else hiddenactivation=hiddenactivation_raw;
@@ -64,7 +64,7 @@ for o = 1:numcategories
 end
 
 if strcmp(outactrule,'sigmoid') % applying sigmoid
-	outputactivations=sigmoid(outputactivations);
+	outputactivations=logsig(outputactivations);
 elseif strcmp(outactrule,'tanh') %applying tanh
 	outputactivations=tanh(outputactivations);
 end
@@ -80,8 +80,6 @@ end
 
 % get error on each output channel
 ssqerror=outputs_for_response-repmat(inputpatterns,[1,1,numcategories]);
-
-% square error and make sure there are no zeros
 ssqerror=ssqerror.^2;
 ssqerror(ssqerror<1e-7) = 1e-7;
 
@@ -91,14 +89,10 @@ fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
 
 %  apply focus weights, then get the sum for each category
 ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
-
-% reshape the error so its more readable
 ssqerror=reshape(ssqerror,[numstimuli,numcategories]);
 
-% invert error
-ssqerror = 1 ./ ssqerror;
-
 % get class probability
+ssqerror = 1 ./ ssqerror;
 p = ssqerror(:,currentcategory)./sum(ssqerror,2);
 
 
