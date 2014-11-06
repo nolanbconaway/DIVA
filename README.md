@@ -33,7 +33,6 @@ model.input ____________ an [eg,dimension] matrix of training exemplars
 model.labels ___________ a column vector of class labels for each input
 ```
 
-Var    |  Desc
 -------|------
 model.numblocks | number of weight updates
 model.numinitials | number of randomized divas
