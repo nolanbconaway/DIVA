@@ -20,22 +20,23 @@ addpath([pwd,'/UTILITIES/']);
 
 % initialize network design and set parameters
 model =  struct;
-	model.numblocks = 16; % number of runs through the training set
-	model.numinitials = 1; % number of randomized divas to be averaged across
-	model.weightrange = 0.5; % range of inital weight values
-	model.numhiddenunits = 2; % # hidden units
+	model.numblocks = 16;      % number of runs through the training set
+	model.numinitials = 5;     % number of initalizations to average 
+	model.weightrange = 0.5;   % range of initial weight values
+	model.numhiddenunits = 2;  % # hidden units
 	model.learningrate = 0.25; % learning rate for gradient descent
-	model.betavalue = 10;
-	
+	model.betavalue = 10;      % beta parameter for focusing
+    model.outputactrule = 'sigmoid'; % {'clipped', 'sigmoid' }
+
 % iterate across shj types
 training = zeros(model.numblocks,6);
 for shj = 1:6
 	
 % 	set current category structre
-	[inputs,labels]=SHJINPUTS(shj);
+	[model.inputs, model.labels] = SHJINPUTS(shj);
 	
 % 	run simulation
-	result = DIVA(model,inputs,labels);
+	result = DIVA(model);
 	
 % 	add result to training data
 	training(:,shj) = result.training;

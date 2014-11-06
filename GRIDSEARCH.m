@@ -21,7 +21,7 @@ addpath([pwd,'/UTILITIES/']);
 % set search range
 numhiddenunits = [2,3,4];     % # hidden units
 learningrate = [0.1:0.1:0.5]; % learning rate for gradient descent
-weightrange = [1, 2, 3];      % range of inital weight values
+weightrange = [1, 2, 3];      % range of initial weight values
 betavalue = [0,5,10,50];      % focusing mulitplier
 parameterlist = allcomb(numhiddenunits,learningrate,weightrange,betavalue);
 numparamconfigs = size(parameterlist,1); 
@@ -33,7 +33,8 @@ updatefrequency = ceil(numparamconfigs*0.05);
 model =  struct;
 	model.numblocks = 32;   % number of runs through the training set
 	model.numinitials = 10; % number of randomized divas to be averaged across
-	
+	model.outputactrule = 'sigmoid'; % {'clipped', 'sigmoid' }
+    
 % iterate across param values
 training = zeros(model.numblocks,6,numparamconfigs);
 for paramnum = 1:numparamconfigs
@@ -47,8 +48,8 @@ for paramnum = 1:numparamconfigs
 		
 % 	iterate across shj types
 	for shj = 1:6
-		[inputs,labels]=SHJINPUTS(shj);
-		result = DIVA(model,inputs,labels);
+		[model.inputs, model.labels] = SHJINPUTS(shj);
+		result = DIVA(model);
 		training(:,shj,paramnum) = result.training;
 	end
 	

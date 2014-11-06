@@ -1,4 +1,5 @@
-function result= DIVA(diva,inputs,labels)
+function result= DIVA(model)
+v2struct(model) %unpack input params
 
 % ----------------------------------------------------------------------------
 % DESCRIPTION
@@ -7,30 +8,29 @@ function result= DIVA(diva,inputs,labels)
 %	well as a log of the the weights learned by diva.
 
 % INPUT ARGUMENTS:
-% 	diva is a struct that is assumed to contain:
-% 		diva.numblocks = 160; % number of weight updates
-% 		diva.numinitials = 50; % number of randomized divas
-% 		diva.weightrange = .5; % range of inital weight values
-% 		diva.numhiddenunits = 2; % # hidden units
-% 		diva.learningrate = .15; % learning rate for gradient descent
-% 		diva.betavalue = 2.5; % beta parameter for focusing
+% 	model is a struct that is assumed to contain:
+% 		model.numblocks      = 160; % number of weight updates
+% 		model.numinitials    = 50; % number of randomized divas
+% 		model.weightrange    = .5; % range of initial weight values
+% 		model.numhiddenunits = 2; % # hidden units
+% 		model.learningrate   = .15; % learning rate for gradient descent
+% 		model.betavalue      = 2.5; % beta parameter for focusing
+%       model.outputactrule  = activation rule for output units. Options:
+%           {"clipped", " sigmoid"}. Otheriwse, it will be linear.
 % 
-%	input is an [eg,dimension] matrix containing a block of unique examples
-%	labels is an integer vector containing category labels for each row in input
+%	    model.input is an [eg,dimension] matrix of training exemplars
+%	    model.labels is an integer vector of class labels for each input
 % ----------------------------------------------------------------------------
 
 %   these are optional editables, currently set at default values
-	hiddenactrule = 'sigmoid'; % which activation rule?
-	outputactrule = 'linear'; % options: 'linear', 'sigmoid', 'tanh'
-	valuerange = [floor(min(min(inputs))), ceil(max(max(inputs)))];
 	weightcenter = 0; % mean value of weights
-    humbleclassify = true; % clip activations at a 
-    humblelearn =  true;   % min and maximum value?
+    
+    % convert all targets to [0 1] for consistency with sigmoid
+    targets = globalscale(inputs,[0 1]);
+
 % ----------------------------------------------------------------------------
 
-
 result=struct; %initialize the results structure
-v2struct(diva) %unpack input params
 
 % initializing some useful variables
 numfeatures = size(inputs,2);
@@ -38,7 +38,7 @@ numstimuli = size(inputs,1);
 numcategories = length(unique(labels));
 numupdates = numblocks*numstimuli;
 
-
+% set up storage for model perfomance
 training=zeros(numupdates,numinitials);
 
 %   Initializing diva and running the simulation
@@ -51,47 +51,35 @@ for modelnumber = 1:numinitials
 
     %  generating full presentation order
     presentationorder = getpresentationorder(numstimuli,numblocks);
-    networkinput=inputs(presentationorder,:);
-    networklabels=labels(presentationorder,:);
     
     %   iterate over each trial in the presentation order
     %   ------------------------------------------------------ % 
 	for trialnumber = 1:numupdates
-        
-		currentinput=networkinput(trialnumber,:);
-		currentcategory=networklabels(trialnumber);
+		currentinput    = inputs(presentationorder(trialnumber),:);
+        currenttarget   = targets(presentationorder(trialnumber),:);
+		currentclass    = labels(presentationorder(trialnumber),:);
 		
+        %  ------------------- complete forward pass
         [p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
-			FORWARDPASS(inweights,outweights,currentinput,hiddenactrule,outputactrule,...
-                betavalue,humbleclassify,valuerange,currentcategory);
+			FORWARDPASS(inweights,outweights,currentinput,currenttarget,outputactrule,...
+                betavalue,currentclass);
         
+        % Store classification accuracy
         training(trialnumber,modelnumber)=p;
 		
-        
-        %   Back-propagating the activations
-        %   ------------------------------------------------------ % 
-        
-        %  obtain error on the output units
-        if humblelearn
-            outputactivations =  clipvalues(outputactivations,valuerange);
-        end
-        outputderivative = 2*(outputactivations(:,:,currentcategory) - currentinput);
-
-        %  obtain error on the hidden units
-		hiddenderivative=outputderivative*outweights(:,:,currentcategory)';
-        if strcmp(hiddenactrule,'sigmoid') % applying sigmoid;
-			hiddenderivative=hiddenderivative(:,2:end).*sigmoidgrad(hiddenactivation_raw);
-        elseif strcmp(hiddenactrule,'tanh') %applying tanh
-			hiddenderivative=hiddenderivative(:,2:end).*tanhgrad(hiddenactivation_raw);
-        end 
-
-        %  gradient descent
-		outweights(:,:,currentcategory) = gradientDescent(learningrate,...
-			hiddenactivation,outputderivative,outweights(:,:,currentcategory));
-		inweights = gradientDescent(learningrate,inputswithbias,...
-			hiddenderivative,inweights);
-		
-	end
+        %  ------------------- back propagate error to adjust weights
+        classweights = outweights(:,:,currentclass);
+        classactivation = outputactivations(:,:,currentclass);
+        [outweights(:,:,currentclass), inweights] = BACKPROP(...
+            classweights,inweights,classactivation,currenttarget,...
+            hiddenactivation,hiddenactivation_raw,inputswithbias,learningrate);
+    end
+    
+% %     ----TEST PHASES CAN BE ADDED HERE. THIS IS A SAMPLE:
+%     testphase(:,modelnumber) = FORWARDPASS(inweights,outweights,...
+%         TEST_INPUTS,TEST_TARGETS,outputactrule,betavalue,1);
+% %     ----------- END TEST PHASES
+    
 end
 
 % store perfomance in the result struct

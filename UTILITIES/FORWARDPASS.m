@@ -1,11 +1,11 @@
 function...
 	[p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
-		FORWARDPASS(inweights,outweights,...%weight matrices
-			inputpatterns,...%activations to be passed through the model
-			hiddenactrule,outactrule,...%option for activation rule
-			betavalue,...%focusing paramater
-			humbleclassify,valuerange,...option to clip activations
-			currentcategory) %category label that p(a) is evaluated by    
+		FORWARDPASS(inweights,outweights,... % weight matrices
+			inputs,... % activations to be passed through the model
+            targets,... % target output activation values for each input
+			outactrule,... % option for activation rule
+			betavalue,... % focusing paramater
+			currentcategory) % category label that p(a) is evaluated by    
                    
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % USAGE
@@ -29,29 +29,23 @@ function...
 % INPUT ARGUMENTS
 % 	inweights,outweights: weight matrices
 % 	inputpatterns (M x N matrix): activations to be passed through the model
-% 	hiddenactrule,outactrule (string): option for activation rule
+%   outactrule (string): option for activation rule
 % 	beta (0<=x<inf): focusing paramater
-% 	humbleclassify (bool), valuerange (vector): option to clip activations
 % 	currentcategory(integer): category label that pCat is evaluated by    
 % 
 %-------------------------------------------------------------------------
 
-numstimuli=size(inputpatterns,1);
-numfeatures=size(inputpatterns,2);
+numstimuli=size(inputs,1);
+numfeatures=size(inputs,2);
 numcategories=size(outweights,3);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % input and hidden unit propgation
-inputswithbias = [ones(numstimuli,1),inputpatterns]; 
+inputswithbias = [ones(numstimuli,1),inputs]; 
 hiddenactivation_raw=inputswithbias*inweights;
 
 % apply hidden node activation rule
-if strcmp(hiddenactrule,'sigmoid') % applying sigmoid;
-    hiddenactivation=logsig(hiddenactivation_raw);
-elseif strcmp(hiddenactrule,'tanh')  %applying tanh
-    hiddenactivation=tanh(hiddenactivation_raw);
-else hiddenactivation=hiddenactivation_raw;
-end
+hiddenactivation=logsig(hiddenactivation_raw);
 
 % adding a value of 1 to represent the bias unit 
 hiddenactivation=[ones(numstimuli,1),hiddenactivation];
@@ -63,28 +57,23 @@ for o = 1:numcategories
     outputactivations(:,:,o)=(hiddenactivation*outweights(:,:,o));
 end
 
-if strcmp(outactrule,'sigmoid') % applying sigmoid
-	outputactivations=logsig(outputactivations);
-elseif strcmp(outactrule,'tanh') %applying tanh
-	outputactivations=tanh(outputactivations);
-end
-
-% apply clipping at output layer
-if humbleclassify
-	outputs_for_response= clipvalues(outputactivations,valuerange);
-else outputs_for_response = outputactivations;
+% applying output activation rule
+if strcmp(outactrule,'sigmoid') 
+	outputactivations = logsig(outputactivations);
+elseif strcmp(outactrule,'clipped') 
+    outputactivations = clipvalues(outputactivations,[0 1]);
 end
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % caluclate error, focus weights, and classification probabilities
 
 % get error on each output channel
-ssqerror=outputs_for_response-repmat(inputpatterns,[1,1,numcategories]);
+ssqerror=outputactivations-repmat(targets,[1,1,numcategories]);
 ssqerror=ssqerror.^2;
 ssqerror(ssqerror<1e-7) = 1e-7;
 
 % generate focus weights
-diversities = exp(betavalue.*mean(abs(diff(outputs_for_response,[],3)),3));
+diversities = exp(betavalue.*mean(abs(diff(outputactivations,[],3)),3));
 fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
 
 %  apply focus weights, then get the sum for each category
