@@ -14,12 +14,12 @@
 
 This set of scripts runs a minimal version of the DIVA model of category learning (Kurtz, 2007). It is written in MATLAB, and is currently set up to simulate the six-types problem of Shepard, Hovland, & Jenkins (1961)--though it should generalize to any dataset. There are a variety of utility scripts, and a few important ones:
 
-- START.m can be used to test DIVA using particular parameter sets.
-- GRIDSEARCH.m can be used to store model performance across a range of parameters
-- DIVA.m uses a provided architecture to train a network on a set of inputs and category assignments.
-- FORWARDPASS.m propagates input activations through the network and returns measures of network performance
+- **START.m** can be used to test DIVA using particular parameter sets.
+- **GRIDSEARCH.m** can be used to store model performance across a range of parameters
+- **DIVA.m** uses a provided architecture to train a network on a set of inputs and category assignments.
+- **FORWARDPASS.m** propagates input activations through the network and returns measures of network performance
 
-Simulations are run by executing the START pr GRIDSEARCH scripts. All simulations begin by passing a model struct to the DIVA script. At a minimum, 'model' needs to include:
+Simulations are run by executing the START.m or GRIDSEARCH.m scripts. All simulations begin by passing a model struct to the DIVA script. At a minimum, 'model' needs to include:
 
 ```
 model.numblocks __________ number of weight updates
