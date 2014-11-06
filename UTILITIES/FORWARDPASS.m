@@ -2,11 +2,11 @@ function...
 	[p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
 		FORWARDPASS(inweights,outweights,... % weight matrices
 			inputs,... % activations to be passed through the model
-            targets,... % target output activation values for each input
+			targets,... % target output activation values for each input
 			outactrule,... % option for activation rule
 			betavalue,... % focusing paramater
-			currentcategory) % category label that p(a) is evaluated by    
-                   
+			currentcategory) % category label that p(a) is evaluated by	
+				   
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % USAGE
 % 	[pCat,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
@@ -31,7 +31,7 @@ function...
 % 	inputpatterns (M x N matrix): activations to be passed through the model
 %   outactrule (string): option for activation rule
 % 	beta (0<=x<inf): focusing paramater
-% 	currentcategory(integer): category label that pCat is evaluated by    
+% 	currentcategory(integer): category label that pCat is evaluated by	
 % 
 %-------------------------------------------------------------------------
 
@@ -54,14 +54,14 @@ hiddenactivation=[ones(numstimuli,1),hiddenactivation];
 % get output activaton
 outputactivations=zeros(numstimuli,numfeatures,numcategories);
 for o = 1:numcategories
-    outputactivations(:,:,o)=(hiddenactivation*outweights(:,:,o));
+	outputactivations(:,:,o)=(hiddenactivation*outweights(:,:,o));
 end
 
 % applying output activation rule
 if strcmp(outactrule,'sigmoid') 
 	outputactivations = logsig(outputactivations);
 elseif strcmp(outactrule,'clipped') 
-    outputactivations = clipvalues(outputactivations,[0 1]);
+	outputactivations = clipvalues(outputactivations,[0 1]);
 end
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 

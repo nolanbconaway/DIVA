@@ -13,5 +13,5 @@ function values = clipvalues(values,value_range)
 values(values<value_range(1))=value_range(1);
 values(values>value_range(2))=value_range(2);
 
-            
-            
+			
+			

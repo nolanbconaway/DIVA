@@ -1,17 +1,17 @@
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% %        _     _      _     _      _     _      _     _         % %
-% %       (c).-.(c)    (c).-.(c)    (c).-.(c)    (c).-.(c)        % %
-% %        / ._. \      / ._. \      / ._. \      / ._. \         % %
-% %      __\( Y )/__  __\( Y )/__  __\( Y )/__  __\( Y )/__       % %
-% %     (_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)      % %
-% %        || D ||      || I ||      || V ||      || A ||         % %
-% %      _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '._       % %
-% %     (.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)      % %
-% %      `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-'       % %
+% %		_	 _	 	 _	   _	  _	    _	   _	 _		 	  % %
+% %	   (c).-.(c)	(c).-.(c)	 (c).-.(c)	  (c).-.(c)			  % %
+% %		/ ._. \	 	 / ._. \	  / ._. \	   / ._. \		 	  % %
+% %	  __\( Y )/__  __\( Y )/__  __\( Y )/__  __\( Y )/__	   	  % %
+% %	 (_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)	  	  % %
+% %		|| D ||	  	 || I ||	  || V ||	   || A ||		 	  % %
+% %	  _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '._	   	  % %
+% %	 (.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)	  	  % %
+% %	  `-'	 `-'  `-'	   `-'  `-'	 	`-'  `-'	 `-'	   	  % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% Use this script to store perfomance for a range of parameterizations
+% Use this script to store performance for a range of parameterizations
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
 % initialize the search path
@@ -19,10 +19,10 @@ clear;close;clc;
 addpath([pwd,'/UTILITIES/']); 
 
 % set search range
-numhiddenunits = [2,3,4];     % # hidden units
+numhiddenunits = [2,3,4];	  % # hidden units
 learningrate = [0.1:0.1:0.5]; % learning rate for gradient descent
-weightrange = [1, 2, 3];      % range of initial weight values
-betavalue = [0,5,10,50];      % focusing mulitplier
+weightrange = [1, 2, 3];	  % range of initial weight values
+betavalue = [0,5,10,50];	  % focusing multiplier
 parameterlist = allcomb(numhiddenunits,learningrate,weightrange,betavalue);
 numparamconfigs = size(parameterlist,1); 
 
@@ -34,7 +34,7 @@ model =  struct;
 	model.numblocks = 32;   % number of runs through the training set
 	model.numinitials = 10; % number of randomized divas to be averaged across
 	model.outputactrule = 'sigmoid'; % {'clipped', 'sigmoid' }
-    
+	
 % iterate across param values
 training = zeros(model.numblocks,6,numparamconfigs);
 for paramnum = 1:numparamconfigs

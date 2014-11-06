@@ -1,17 +1,17 @@
 function [outweights, inweights] = BACKPROP(...
-            outweights,inweights,... % weights to be updated
-            outputactivations,...    % predictions produced by the network
-            currenttarget,...        % target activations
-            hiddenactivation,...     % hidden recodings passed to outputs
-            hiddenactivation_raw,... % raw hidden layer recodings
-            inputswithbias,...       % model inputs [with bias]
-            learningrate)            % learning rate parameter
-    
+			outweights,inweights,... 	% weights to be updated
+			outputactivations,...		% predictions produced by the network
+			currenttarget,...			% target activations
+			hiddenactivation,...	 	% hidden recodings passed to outputs
+			hiddenactivation_raw,... 	% raw hidden layer recodings
+			inputswithbias,...	   		% model inputs [with bias]
+			learningrate)				% learning rate parameter
+	
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % USAGE
 % [outweights, inweights] = BACKPROP(outweights,inweights,...
-%     outputactivations,currenttarget,hiddenactivation,...
-%     hiddenactivation_raw,inputswithbias,learningrate)
+%	 outputactivations,currenttarget,hiddenactivation,...
+%	 hiddenactivation_raw,inputswithbias,learningrate)
 % 
 % DESCRIPTION
 % 	This completes a backward pass of prediction error, and returns
@@ -20,13 +20,13 @@ function [outweights, inweights] = BACKPROP(...
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % 
 % INPUT ARGUMENTS
-%   outweights,inweights    weights to be updated
-%   outputactivations       predictions produced by the network
-%   currenttarget           target activations
-%   hiddenactivation        hidden recodings passed to outputs
-%   hiddenactivation_raw    raw hidden layer recodings
-%   inputswithbias          model inputs [with bias]
-%   learningrate            learning rate parameter    
+%   outweights,inweights	weights to be updated
+%   outputactivations	   	predictions produced by the network
+%   currenttarget		   	target activations
+%   hiddenactivation		hidden recodings passed to outputs
+%   hiddenactivation_raw	raw hidden layer recodings
+%   inputswithbias		  	model inputs [with bias]
+%   learningrate			learning rate parameter	
 % 
 %-------------------------------------------------------------------------
 
