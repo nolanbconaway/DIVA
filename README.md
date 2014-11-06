@@ -38,3 +38,5 @@ For almost all situations, inputs should be scaled to [-1 +1]. However, the targ
 By default, DIVA uses clipped linear output units for continuous datasets, and logistic outputs for binary datasets. This option is set using model.outputactrule (set to either 'clipped' or 'sigmoid'). When clipped linear outputs are used, SSE will be the error measure. Cross-entropy error is used for logistic outputs. Hidden units are always logistic.
 
 DIVA.m will train the network and return a result struct. As-is, 'result' contains only training accuracy for each initialization at each training block. Additional measures, such as test phase classification, can be added. 
+
+*Nolan Conaway (nconawa1@binghamton.edu)*
