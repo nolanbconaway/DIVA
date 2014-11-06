@@ -1,16 +1,16 @@
-<!-- % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% %             _     _      _     _      _     _      _     _              % %
-% %            (c).-.(c)    (c).-.(c)    (c).-.(c)    (c).-.(c)             % %
-% %             / ._. \      / ._. \      / ._. \      / ._. \              % %
-% %           __\( Y )/__  __\( Y )/__  __\( Y )/__  __\( Y )/__            % %
-% %          (_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)           % %
-% %             || D ||      || I ||      || V ||      || A ||              % %
-% %           _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '._            % %
-% %          (.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)           % %
-% %           `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-'            % %
-% %                                                                         % %
-% %           Written by Nolan Conaway (nconawa1@binghamton.edu).           % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % -->
+<!-- % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %% % %
+% %         _     _      _     _      _     _      _     _          % %
+% %        (c).-.(c)    (c).-.(c)    (c).-.(c)    (c).-.(c)         % %
+% %         / ._. \      / ._. \      / ._. \      / ._. \          % %
+% %       __\( Y )/__  __\( Y )/__  __\( Y )/__  __\( Y )/__        % %
+% %      (_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)       % %
+% %         || D ||      || I ||      || V ||      || A ||          % %
+% %       _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '._        % %
+% %      (.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)       % %
+% %       `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-'        % %
+% %                                                                 % %
+% %       Written by Nolan Conaway (nconawa1@binghamton.edu).       % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % -->
 
 This set of scripts runs a minimal version of the DIVA model of category 
 learning (Kurtz, 2007). It is written in MATLAB, and is currently set up to 
@@ -20,24 +20,24 @@ and a few important ones:
 
 (1) START.m can be used to test DIVA using particular parameter sets.
 (2) GRIDSEARCH.m can be used to store model performance across a range of 
-	parameters
+    parameters
 (3) DIVA.m uses a provided architecture to train a network on a set of inputs 
-	and category assignments.
+    and category assignments.
 (4) FORWARDPASS.m propagates input activations through the network and returns
-	measures of network performance
+    measures of network performance
 
 Simulations are run by executing the START pr GRIDSEARCH scripts. All 
 simulations begin by passing a model struct to the DIVA script. At a minimum,
 'model' needs to include:
-	model.numblocks 		number of weight updates
-	model.numinitials 		number of randomized divas
-	model.weightrange   	range of initial weight values
-	model.numhiddenunits 	# hidden units
-	model.learningrate   	learning rate for gradient descent
-	model.betavalue      	beta parameter for focusing
-	model.outputactrule     output rule option:  {"clipped", " sigmoid"}.
-    model.input  			an [eg,dimension] matrix of training exemplars
-    model.labels 			a column vector of class labels for each input
+    model.numblocks          number of weight updates
+    model.numinitials        number of randomized divas
+    model.weightrange        range of initial weight values
+    model.numhiddenunits     # hidden units
+    model.learningrate       learning rate for gradient descent
+    model.betavalue          beta parameter for focusing
+    model.outputactrule      output rule option:  {"clipped", " sigmoid"}.
+    model.input              an [eg,dimension] matrix of training exemplars
+    model.labels             a column vector of class labels for each input
 
 For almost all situations, inputs should be scaled to [-1 +1]. However, the
 target activations should be scaled to [0 1], in order to permit logistic 
