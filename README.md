@@ -28,22 +28,10 @@ model.weightrange ______ range of initial weight values
 model.numhiddenunits ___ # hidden units
 model.learningrate _____ learning rate for gradient descent
 model.betavalue ________ beta parameter for focusing
-model.outputactrule ____ output rule option:  {"clipped", " sigmoid"}.
+model.outputactrule ____ output activation rule. options:  {"clipped", " sigmoid"}.
 model.input ____________ an [eg,dimension] matrix of training exemplars
 model.labels ___________ a column vector of class labels for each input
 ```
-
-- | -
--------|------
-model.numblocks | number of weight updates
-model.numinitials | number of randomized divas
-model.weightrange | range of initial weight values
-model.numhiddenunits | # hidden units
-model.learningrate | learning rate for gradient descent
-model.betavalue | beta parameter for focusing
-model.outputactrule | output rule option:  {"clipped", " sigmoid"}.
-model.input | an [eg,dimension] matrix of training exemplars
-model.labels | a column vector of class labels for each input
 
 For almost all situations, inputs should be scaled to [-1 +1]. However, the target activations should be scaled to [0 1], in order to permit logistic output units. By default, the program automatically computes targets as scaled versions of the inputs. This is done in DIVA.m
 
