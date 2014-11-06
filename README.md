@@ -18,13 +18,13 @@ simulate the six-types problem of Shepard, Hovland, & Jenkins (1961)--though
 it should generalize to any dataset. There are a variety of utility scripts, 
 and a few important ones:
 
-(1) START.m can be used to test DIVA using particular parameter sets.
-(2) GRIDSEARCH.m can be used to store model performance across a range of 
-    parameters
-(3) DIVA.m uses a provided architecture to train a network on a set of inputs 
-    and category assignments.
-(4) FORWARDPASS.m propagates input activations through the network and returns
-    measures of network performance
+    (1) START.m can be used to test DIVA using particular parameter sets.
+    (2) GRIDSEARCH.m can be used to store model performance across a range 
+        of parameters
+    (3) DIVA.m uses a provided architecture to train a network on a set of 
+        inputs and category assignments.
+    (4) FORWARDPASS.m propagates input activations through the network and
+        returns measures of network performance
 
 Simulations are run by executing the START pr GRIDSEARCH scripts. All 
 simulations begin by passing a model struct to the DIVA script. At a minimum,
