@@ -33,6 +33,18 @@ model.input ____________ an [eg,dimension] matrix of training exemplars
 model.labels ___________ a column vector of class labels for each input
 ```
 
+Var    |  Desc
+-------|------
+model.numblocks | number of weight updates
+model.numinitials | number of randomized divas
+model.weightrange | range of initial weight values
+model.numhiddenunits | # hidden units
+model.learningrate | learning rate for gradient descent
+model.betavalue | beta parameter for focusing
+model.outputactrule | output rule option:  {"clipped", " sigmoid"}.
+model.input | an [eg,dimension] matrix of training exemplars
+model.labels | a column vector of class labels for each input
+
 For almost all situations, inputs should be scaled to [-1 +1]. However, the target activations should be scaled to [0 1], in order to permit logistic output units. By default, the program automatically computes targets as scaled versions of the inputs. This is done in DIVA.m
 
 By default, DIVA uses clipped linear output units for continuous datasets, and logistic outputs for binary datasets. This option is set using model.outputactrule (set to either 'clipped' or 'sigmoid'). When clipped linear outputs are used, SSE will be the error measure. Cross-entropy error is used for logistic outputs. Hidden units are always logistic.
