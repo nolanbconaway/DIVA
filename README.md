@@ -1,4 +1,4 @@
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+<!-- % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % %             _     _      _     _      _     _      _     _              % %
 % %            (c).-.(c)    (c).-.(c)    (c).-.(c)    (c).-.(c)             % %
 % %             / ._. \      / ._. \      / ._. \      / ._. \              % %
@@ -10,7 +10,7 @@
 % %           `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-'            % %
 % %                                                                         % %
 % %           Written by Nolan Conaway (nconawa1@binghamton.edu).           % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % -->
 
 This set of scripts runs a minimal version of the DIVA model of category 
 learning (Kurtz, 2007). It is written in MATLAB, and is currently set up to 
@@ -50,4 +50,6 @@ model.outputactrule (set to either 'clipped' or 'sigmoid'). When clipped
 linear outputs are used, SSE will be the error measure. Cross-entropy error
 is used for logistic outputs. Hidden units are always logistic.
 
-DIVA.m will train the network and return a result struct. As-is, 'result' contains only training accuracy for each initialization at each training block. Additional measures, such as test phase classification, can be added. 
+DIVA.m will train the network and return a result struct. As-is, 'result' contains only
+training accuracy for each initialization at each training block. Additional measures,
+such as test phase classification, can be added. 
