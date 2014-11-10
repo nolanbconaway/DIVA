@@ -23,15 +23,15 @@ This set of scripts runs a minimal version of the DIVA model of category learnin
 Simulations are run by executing the START.m or GRIDSEARCH.m scripts. All simulations begin by passing a model struct to the DIVA script. At a minimum, 'model' needs to include:
 
 ```
-model.numblocks __________ number of weight updates
-model.numinitials ________ number of randomized divas
-model.weightrange ________ range of initial weight values
-model.numhiddenunits _____ option for number of hidden units
-model.learningrate _______ learning rate for gradient descent
 model.betavalue __________ beta parameter for focusing
-model.outputrule _________ output activation rule option.
 model.input ______________ an [eg,dimension] matrix of training exemplars
 model.labels _____________ a column vector of class labels for each input
+model.learningrate _______ learning rate for gradient descent
+model.numblocks __________ number of passes through the training set
+model.numhiddenunits _____ option for number of hidden units
+model.numinitials ________ number of randomized divas
+model.outputrule _________ output activation rule option.
+model.weightrange ________ range of initial weight values
 ```
 
 For almost all situations, inputs should be scaled to [-1 +1]. However, the target activations should be scaled to [0 1], in order to permit logistic output units. By default, the program automatically computes targets as scaled versions of the inputs. This is done in DIVA.m
