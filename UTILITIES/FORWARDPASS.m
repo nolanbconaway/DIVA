@@ -1,17 +1,13 @@
 function...
-	[p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
+	[outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
 		FORWARDPASS(inweights,outweights,... % weight matrices
 			inputs,... % activations to be passed through the model
-			targets,... % target output activation values for each input
-			outactrule,... % option for activation rule
-			betavalue,... % focusing paramater
-			currentcategory) % category label that p(a) is evaluated by	
+			outputrule) % option for activation rule	
 				   
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % USAGE
-% 	[pCat,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
-% 	forwardpass(inweights,outweights,inputpatterns,hiddenactrule,
-% 			outactrule,beta,humbleClassify,valueRange,currentcategory)
+% 	[outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
+%		forwardpass(inweights,outweights,inputs,outputrule)
 % 
 % DESCRIPTION
 % 	This completes a forward pass, and returns p(cat),as well as any info 
@@ -20,18 +16,15 @@ function...
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % 
 % OUTPUT ARGUMENTS
-% 	p: probabilty of classification as member of category C
-% 	outputactivations: output layer activations
-% 	hiddenactivation: hidden layer activations,including bias
-% 	hiddenactivation_raw: dot product of inputs and in-hid weights
-% 	inputswithbias: input activations, with bias
+% 	outputactivations			output layer activations
+% 	hiddenactivation			hidden layer activations,including bias
+% 	hiddenactivation_raw		dot product of inputs and in-hid weights
+% 	inputswithbias				input activations, with bias
 % 
 % INPUT ARGUMENTS
-% 	inweights,outweights: weight matrices
-% 	inputpatterns (M x N matrix): activations to be passed through the model
-%   outactrule (string): option for activation rule
-% 	beta (0<=x<inf): focusing paramater
-% 	currentcategory(integer): category label that pCat is evaluated by	
+% 	inweights, outweights		weight matrices
+% 	inputs (M x N matrix)		activations to be passed through the model
+%   outputrule (string)			option for activation rule
 % 
 %-------------------------------------------------------------------------
 
@@ -58,31 +51,9 @@ for o = 1:numcategories
 end
 
 % applying output activation rule
-if strcmp(outactrule,'sigmoid') 
+if strcmp(outputrule,'sigmoid') 
 	outputactivations = logsig(outputactivations);
-elseif strcmp(outactrule,'clipped') 
+elseif strcmp(outputrule,'clipped') 
 	outputactivations = clipvalues(outputactivations,[0 1]);
 end
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% caluclate error, focus weights, and classification probabilities
-
-% get error on each output channel
-ssqerror=outputactivations-repmat(targets,[1,1,numcategories]);
-ssqerror=ssqerror.^2;
-ssqerror(ssqerror<1e-7) = 1e-7;
-
-% generate focus weights
-diversities = exp(betavalue.*mean(abs(diff(outputactivations,[],3)),3));
-fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
-
-%  apply focus weights, then get the sum for each category
-ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
-ssqerror=reshape(ssqerror,[numstimuli,numcategories]);
-
-% get class probability
-ssqerror = 1 ./ ssqerror;
-p = ssqerror(:,currentcategory)./sum(ssqerror,2);
-
-
 

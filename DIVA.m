@@ -15,7 +15,7 @@ v2struct(model) %unpack input params
 % 		model.numhiddenunits 	= 2; % # hidden units
 % 		model.learningrate   	= .15; % learning rate for gradient descent
 % 		model.betavalue	  		= 2.5; % beta parameter for focusing
-%	   	model.outputactrule = activation rule for output units. Options:
+%	   	model.outputrule = activation rule for output units. Options:
 %		   {"clipped", " sigmoid"}. Otherwise, it will be linear.
 % 
 %		model.input is an [eg,dimension] matrix of training exemplars
@@ -59,9 +59,12 @@ for modelnumber = 1:numinitials
 		currentclass  =  labels(presentationorder(trialnumber),:);
 		
 		%  ------------------- complete forward pass
-		[p,outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
-			FORWARDPASS(inweights,outweights,currentinput,currenttarget,outputactrule,...
-				betavalue,currentclass);
+		[outputactivations,hiddenactivation,hiddenactivation_raw,inputswithbias] = ...
+			FORWARDPASS(inweights,outweights,currentinput,outputrule);
+		
+		% --- compute classification probability
+		p = responserule(outputactivations, currenttarget, ...
+			betavalue, currentclass);
 		
 		% Store classification accuracy
 		training(trialnumber,modelnumber)=p;
@@ -75,8 +78,8 @@ for modelnumber = 1:numinitials
 	end
 	
 % %	 ----TEST PHASES CAN BE ADDED HERE. THIS IS A SAMPLE:
-%	 testphase(:,modelnumber) = FORWARDPASS(inweights,outweights,...
-%		 TEST_INPUTS,TEST_TARGETS,outputactrule,betavalue,1);
+%	 TEST_OUTS = FORWARDPASS(inweights,outweights,TEST_INPUTS,outputactrule);
+% 	 TEST_CLASSIFY = responserule(TEST_OUTS, TEST_TARGETS, betavalue, 1);
 % %	 ----------- END TEST PHASES
 	
 end

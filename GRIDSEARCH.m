@@ -33,7 +33,7 @@ updatefrequency = ceil(numparamconfigs*0.05);
 model =  struct;
 	model.numblocks = 32;   % number of runs through the training set
 	model.numinitials = 10; % number of randomized divas to be averaged across
-	model.outputactrule = 'sigmoid'; % {'clipped', 'sigmoid' }
+	model.outputrule = 'sigmoid'; % {'clipped', 'sigmoid' }
 	
 % iterate across param values
 training = zeros(model.numblocks,6,numparamconfigs);

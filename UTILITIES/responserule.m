@@ -1,0 +1,52 @@
+function [p,ssqerror,fweights] = responserule(...
+	outputactivations,...	% generated outputs from forward pass
+	targetactivations,...	% target activations
+	betavalue,...			% focusing parameter 
+	targetcategory) 		% category label that p(a) is evaluated by	
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% USAGE
+% [p,ssqerror,fweights] = responserule( outputactivations, targets, ...
+% 		betavalue, targetcategory) 	
+% 
+% DESCRIPTION
+% 	This script implements DIVA's response rule for converting output
+% 	activations into classification probabilities. It should be used after
+% 	calling FORWARDPASS.m to generate output activations.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% 
+% OUTPUT ARGUMENTS
+% 	p				probability of classification for target category
+% 	ssqerror		error used in the Luce Choice formula
+% 	fweights		focusing weights used to weigh ssqerror
+% 
+% INPUT ARGUMENTS
+% 	outputactivations		generated outputs from forward pass
+% 	targetactivations		target activations
+% 	betavalue				focusing parameter 
+% 	targetcategory			category label that p(a) is evaluated by		
+% 
+%-------------------------------------------------------------------------
+numcategories = size(outputactivations, 3);
+numfeatures = size(targetactivations, 2);
+numstimuli = size(targetactivations, 1);
+
+%-------------------------------------------
+% get error on each output channel
+ssqerror=outputactivations-repmat(targetactivations,[1,1,numcategories]);
+ssqerror=ssqerror.^2;
+ssqerror(ssqerror<1e-7) = 1e-7;
+
+%-------------------------------------------
+% generate focus weights
+diversities = exp(betavalue.*mean(abs(diff(outputactivations,[],3)),3));
+fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
+
+%  apply focus weights, then get the sum for each category
+ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
+ssqerror=reshape(ssqerror,[numstimuli,numcategories]);
+
+%-------------------------------------------
+% get class probability
+ssqerror = 1 ./ ssqerror;
+p = ssqerror(:,targetcategory)./sum(ssqerror,2);
