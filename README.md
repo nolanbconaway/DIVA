@@ -41,4 +41,5 @@ By default, DIVA uses clipped linear output units for continuous datasets, and l
 DIVA.m will train the network and return a result struct. As-is, 'result' contains only training accuracy for each initialization at each training block. Additional measures, such as test phase classification, can be added. You will need to write custom code to compare DIVA's performance to a set of behavioral data.
 
 *Nolan Conaway (nconawa1@binghamton.edu)* 
+
 *November 10, 2014*
