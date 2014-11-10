@@ -36,7 +36,7 @@ model.weightrange ________ range of initial weight values
 
 For almost all situations, inputs should be scaled to [-1 +1]. However, the target activations should be scaled to [0 1], in order to permit logistic output units. By default, the program automatically computes targets as scaled versions of the inputs. This is done in DIVA.m
 
-By default, DIVA uses clipped linear output units for continuous datasets, and logistic outputs for binary datasets. This option is set using model.outputactrule (set to either 'clipped' or 'sigmoid'). When clipped linear outputs are used, SSE will be the error measure. Cross-entropy error is used for logistic outputs. Hidden units are always logistic.
+By default, DIVA uses clipped linear output units for continuous datasets, and logistic outputs for binary datasets. This option is set using model.outputrule (set to either 'clipped' or 'sigmoid'). When clipped linear outputs are used, SSE will be the error measure. Cross-entropy error is used for logistic outputs. Hidden units are always logistic.
 
 DIVA.m will train the network and return a result struct. As-is, 'result' contains only training accuracy for each initialization at each training block. Additional measures, such as test phase classification, can be added. You will need to write custom code to compare DIVA's performance to a set of behavioral data.
 
