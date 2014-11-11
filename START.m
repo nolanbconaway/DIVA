@@ -26,7 +26,7 @@ model =  struct;
 	model.numhiddenunits = 2;  % # hidden units
 	model.learningrate = 0.25; % learning rate for gradient descent
 	model.betavalue = 10;	  % beta parameter for focusing
-	model.outputrule = 'sigmoid'; % {'clipped', 'sigmoid' }
+	model.outputrule = 'sigmoid'; % {'linear', 'sigmoid' }
 
 % iterate across shj types
 training = zeros(model.numblocks,6);

@@ -53,7 +53,5 @@ end
 % applying output activation rule
 if strcmp(outputrule,'sigmoid') 
 	outputactivations = logsig(outputactivations);
-elseif strcmp(outputrule,'clipped') 
-	outputactivations = clipvalues(outputactivations,[0 1]);
 end
 

@@ -1,18 +1,17 @@
-function [p,ssqerror,fweights] = responserule(...
+function [ps,ssqerror,fweights] = responserule(...
 	outputactivations,...	% generated outputs from forward pass
 	targetactivations,...	% target activations
-	betavalue,...			% focusing parameter 
-	targetcategory) 		% category label that p(a) is evaluated by	
+	betavalue)				% focusing parameter
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % USAGE
-% [p,ssqerror,fweights] = responserule( outputactivations, targets, ...
-% 		betavalue, targetcategory) 	
+% [ps,ssqerror,fweights] = responserule(outputactivations, targets, betavalue) 	
 % 
 % DESCRIPTION
 % 	This script implements DIVA's response rule for converting output
 % 	activations into classification probabilities. It should be used after
 % 	calling FORWARDPASS.m to generate output activations.
+% 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % 
 % OUTPUT ARGUMENTS
@@ -24,7 +23,6 @@ function [p,ssqerror,fweights] = responserule(...
 % 	outputactivations		generated outputs from forward pass
 % 	targetactivations		target activations
 % 	betavalue				focusing parameter 
-% 	targetcategory			category label that p(a) is evaluated by		
 % 
 %-------------------------------------------------------------------------
 numcategories = size(outputactivations, 3);
@@ -49,4 +47,4 @@ ssqerror=reshape(ssqerror,[numstimuli,numcategories]);
 %-------------------------------------------
 % get class probability
 ssqerror = 1 ./ ssqerror;
-p = ssqerror(:,targetcategory)./sum(ssqerror,2);
+ps = ssqerror./repmat(sum(ssqerror,2),[1,numcategories]);
