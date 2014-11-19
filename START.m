@@ -1,27 +1,12 @@
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% %		_	 _	 	 _	   _	  _	    _	   _	 _		 	  % %
-% %	   (c).-.(c)	(c).-.(c)	 (c).-.(c)	  (c).-.(c)			  % %
-% %		/ ._. \	 	 / ._. \	  / ._. \	   / ._. \		 	  % %
-% %	  __\( Y )/__  __\( Y )/__  __\( Y )/__  __\( Y )/__	   	  % %
-% %	 (_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)(_.-/'-'\-._)	  	  % %
-% %		|| D ||	  	 || I ||	  || V ||	   || A ||		 	  % %
-% %	  _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '._	   	  % %
-% %	 (.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)(.-./`-'\.-.)	  	  % %
-% %	  `-'	 `-'  `-'	   `-'  `-'	 	`-'  `-'	 `-'	   	  % %
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% Use this script to initialize the DIVA model and begin a simulation
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-
 % initialize the search path
 clear;close;clc;
-addpath([pwd,'/UTILITIES/']); 
+addpath([pwd,'/utils/']); 
 
 % initialize network design and set parameters
 model =  struct;
 	model.numblocks = 16;	  % number of runs through the training set
-	model.numinitials = 2;	 % number of initializations to average 
+	model.numinitials = 1;	 % number of initializations to average 
 	model.weightrange = 0.5;   % range of initial weight values
 	model.numhiddenunits = 2;  % # hidden units
 	model.learningrate = 0.25; % learning rate for gradient descent
@@ -44,4 +29,15 @@ end
 	
 disp(training)
 
+% --- PLOTTING RESULTS
+figure
+for i = 1:6
+	plot(training(:,i),'--k')
+	text(1:model.numblocks,training(:,i),num2str(i),...
+		'horizontalalignment','center','fontsize',15)
+	hold on
+end
+axis([0.5 model.numblocks+0.5 0 1])
+axis square
+set(gca','ygrid','on')
 
