@@ -1,6 +1,4 @@
 function result= DIVA(model)
-v2struct(model) %unpack input params
-
 % ----------------------------------------------------------------------------
 % DESCRIPTION
 %	this script does most of the work for training DIVA. 
@@ -20,6 +18,8 @@ v2struct(model) %unpack input params
 %		model.input is an [eg,dimension] matrix of training exemplars
 %		model.labels is an integer vector of class labels for each input
 % ----------------------------------------------------------------------------
+v2struct(model) %unpack input params
+rng('shuffle') %get new random seed
 
 %   these are optional editables, currently set at default values
 	weightcenter = 0; % mean value of weights

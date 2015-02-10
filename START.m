@@ -5,10 +5,10 @@ addpath([pwd,'/utils/']);
 
 % initialize network design and set parameters
 model =  struct;
-	model.numblocks = 16;	  % number of runs through the training set
-	model.numinitials = 1;	 % number of initializations to average 
+	model.numblocks = 20;	  % number of runs through the training set
+	model.numinitials = 5;	 % number of initializations to average 
 	model.weightrange = 0.5;   % range of initial weight values
-	model.numhiddenunits = 2;  % # hidden units
+	model.numhiddenunits = 3;  % # hidden units
 	model.learningrate = 0.25; % learning rate for gradient descent
 	model.betavalue = 10;	  % beta parameter for focusing
 	model.outputrule = 'sigmoid'; % {'linear', 'sigmoid' }
