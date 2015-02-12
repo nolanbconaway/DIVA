@@ -39,5 +39,5 @@ for i = 1:6
 end
 axis([0.5 model.numblocks+0.5 0 1])
 axis square
-set(gca','ygrid','on')
+set(gca,'ygrid','on')
 
