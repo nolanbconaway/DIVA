@@ -16,3 +16,7 @@
 
 # Simulink Code Generation
 slprj/
+
+# ds store
+.DS_Store
+
