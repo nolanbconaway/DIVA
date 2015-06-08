@@ -38,7 +38,7 @@ inputswithbias = [ones(numstimuli,1),inputs];
 hiddenactivation_raw=inputswithbias*inweights;
 
 % apply hidden node activation rule
-hiddenactivation=logsig(hiddenactivation_raw);
+hiddenactivation=sigmoid(hiddenactivation_raw);
 
 % adding a value of 1 to represent the bias unit 
 hiddenactivation=[ones(numstimuli,1),hiddenactivation];
@@ -52,6 +52,6 @@ end
 
 % applying output activation rule
 if strcmp(outputrule,'sigmoid') 
-	outputactivations = logsig(outputactivations);
+	outputactivations = sigmoid(outputactivations);
 end
 
