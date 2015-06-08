@@ -18,4 +18,5 @@
 slprj/
 
 # ds store
-*.DS*
+.DS_Store
+
