@@ -10,7 +10,7 @@ model =  struct;
 	model.weightrange = 0.5;   % range of initial weight values
 	model.numhiddenunits = 7;  % # hidden units
 	model.learningrate = 0.25; % learning rate for gradient descent
-	model.betavalue = 10;	  % beta parameter for focusing
+	model.betavalue = 5;	  % beta parameter for focusing
 	model.outputrule = 'sigmoid'; % {'linear', 'sigmoid' }
 
 % iterate across shj types
@@ -25,6 +25,7 @@ for shj = 1:6
 	
 % 	add result to training data
 	training(:,shj) = result.training;
+	
 end
 	
 disp(training)
