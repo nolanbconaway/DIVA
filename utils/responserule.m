@@ -37,7 +37,7 @@ ssqerror(ssqerror<1e-7) = 1e-7;
 
 %-------------------------------------------
 % generate focus weights
-diversities = exp(betavalue.*mean(abs(diff(outputactivations,[],3)),3));
+diversities = exp(betavalue.*mean(abs(pdiff(outputactivations,3)),3));
 diversities(diversities>1e+7) = 1e+7; % prevent Infs
 fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
 

@@ -48,7 +48,7 @@ for modelnumber = 1:numinitials
 		numcategories, weightrange, weightcenter);
 
 	%  generating full presentation order
-	presentationorder = getpresentationorder(numstimuli,numblocks);
+	presentationorder = shuffletrials(numstimuli,numblocks);
 	
 	%   iterate over each trial in the presentation order
 	%   ------------------------------------------------------ % 

@@ -7,18 +7,23 @@ addpath([pwd,'/utils/']);
 model =  struct;
 	model.numblocks = 20;	  % number of runs through the training set
 	model.numinitials = 5;	 % number of initializations to average 
-	model.weightrange = 0.5;   % range of initial weight values
+	model.weightrange = 1;   % range of initial weight values
 	model.numhiddenunits = 7;  % # hidden units
-	model.learningrate = 0.25; % learning rate for gradient descent
+	model.learningrate = 0.15; % learning rate for gradient descent
 	model.betavalue = 5;	  % beta parameter for focusing
 	model.outputrule = 'sigmoid'; % {'linear', 'sigmoid' }
 
+% 	load model inputs
+	load shj
+	model.inputs = stimuli;
+	
+	
 % iterate across shj types
 training = zeros(model.numblocks,6);
 for shj = 1:6
 	
 % 	set current category structure
-	[model.inputs, model.labels] = SHJINPUTS(shj);
+	model.labels = assignments(:,shj);
 	
 % 	run simulation
 	result = DIVA(model);
@@ -29,16 +34,3 @@ for shj = 1:6
 end
 	
 disp(training)
-
-% --- PLOTTING RESULTS
-figure
-for i = 1:6
-	plot(training(:,i),'--k')
-	text(1:model.numblocks,training(:,i),num2str(i),...
-		'horizontalalignment','center','fontsize',15)
-	hold on
-end
-axis([0.5 model.numblocks+0.5 0 1])
-axis square
-set(gca,'ygrid','on')
-
