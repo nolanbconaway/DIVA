@@ -39,7 +39,7 @@ ssqerror(ssqerror<1e-7) = 1e-7;
 % generate focus weights
 diversities = exp(betavalue.*mean(abs(pdiff(outputactivations,3)),3));
 diversities(diversities>1e+7) = 1e+7; % prevent Infs
-fweights = diversities ./ repmat(sum(diversities,2),[1,numfeatures]);
+fweights  = bsxfun(@rdivide,diversities,sum(diversities,2));
 
 %  apply focus weights, then get the sum for each category
 ssqerror=sum(ssqerror.*repmat(fweights,[1,1,numcategories]),2);
@@ -48,4 +48,4 @@ ssqerror=reshape(ssqerror,[numstimuli,numcategories]);
 %-------------------------------------------
 % get class probability
 ssqerror = 1 ./ ssqerror;
-ps = ssqerror./repmat(sum(ssqerror,2),[1,numcategories]);
+ps = bsxfun(@rdivide,ssqerror,sum(ssqerror,2));
