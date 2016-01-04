@@ -4,11 +4,11 @@
 |  \|\  /_ _ _  _ _ |_          
 |__/| \/(-| (_)(-| )|_            Written by Nolan Conaway
             _/                    bingweb.binghamton.edu/~nconawa1/
- /\    |_ _  _ _  _ _  _| _ _     Updated November 30, 2015
+ /\    |_ _  _ _  _ _  _| _ _     Updated Janurary 4, 2016
 /--\|_||_(_)(-| )(_(_)(_|(-|  
                               
 --------------------------------------------------------------------------
-```                                                                     
+```
 
 This set of scripts runs a minimal version of the DIVA model of category learning (Kurtz, 2007). It is written in MATLAB, and is currently set up to simulate the six-types problem of Shepard, Hovland, & Jenkins (1961)--though it should generalize to any dataset. There are a variety of utility scripts, and a few important ones:
 
@@ -19,20 +19,23 @@ This set of scripts runs a minimal version of the DIVA model of category learnin
 
 Simulations are run by executing the *START.m* script. All simulations begin by passing a model struct to the *DIVA.m* function. At a minimum, 'model' needs to include:
 
-```
-model.betavalue __________ beta parameter for focusing
-model.inputs _____________ an [eg,dimension] matrix of training exemplars
-model.labels _____________ a column vector of class labels for each input
-model.learningrate _______ learning rate for gradient descent
-model.numblocks __________ number of passes through the training set
-model.numhiddenunits _____ option for number of hidden units
-model.numinitials ________ number of randomized divas
-model.outputrule _________ output activation rule option.
-model.weightrange ________ range of initial weight values
-```
 
-For almost all situations, inputs should be scaled to [-1 +1]. However, the target activations should be scaled to [0 1], in order to permit logistic output units. By default, the program automatically computes targets as scaled versions of the inputs. This is done in *DIVA.m*
 
-By default, DIVA uses linear output units for continuous datasets, and logistic outputs for binary datasets. This option is set using model.outputrule: 'sigmoid' for logistic units, other values will result in linear. When linear outputs are used, SSE will be the error measure. Cross-entropy error is used for logistic outputs. Hidden units are always logistic.
+| Field             | Description                               | Type                      |
+| ----------------- | ------------------------------------------| :-----------------------: |
+| `inputs`          | Training items                            | Item-by-feature matrix    |
+| `labels`          | Class assignments                         | Column integer vector     |
+| `numblocks`       | # of passes through the training set      | Integer (>0)              |
+| `numinitials`     | # of random initial networks              | Integer (>0)              |
+| `outputrule`      | activation rule for the category channels | '*sigmoid*' or '*linear*' |
+| `numhiddenunits`  | number of hidden units                    | Integer (>0)              |
+| `learningrate`    | Learning rate                             | Float (0 - Inf)           |
+| `weightrange`     | range of initial weight values            | Float (0 - Inf)           |
+| `betavalue`       | Focusing Parameter                        | Float (0 - Inf)           |
+
+
+For almost all situations, inputs should be scaled to [-1 +1]. However, the target activations should be scaled to [0 1], in order to permit logistic output units. By default, the program automatically computes targets as scaled versions of the inputs (`targets = inputs / 2 + 0.5`). This is done in *DIVA.m*
+
+By default, DIVA uses linear output units for continuous datasets, and logistic outputs for binary datasets. This option is set using outputrule: 'sigmoid' for logistic units, other values will result in linear. When linear outputs are used, SSE will be the error measure. Cross-entropy error is used for logistic outputs. Hidden units are always logistic.
 
 DIVA.m will train the network and return a result struct. As-is, 'result' contains only training accuracy for each initialization at each training block. Additional measures, such as test phase classification, can be added. You will need to write custom code to compare DIVA's performance to a set of behavioral data.

@@ -24,8 +24,8 @@ rng('shuffle') %get new random seed
 %   these are optional editables, currently set at default values
 	weightcenter = 0; % mean value of weights
 	
-	% convert all targets to [0 1] for consistency with sigmoid
-	targets = globalscale(inputs,[0 1]);
+	% convert targets from [-1 +1] to [0 1] for sigmoid
+	targets = inputs / 2 + 0.5;
 % ----------------------------------------------------------------------------
 
 result=struct; %initialize the results structure
